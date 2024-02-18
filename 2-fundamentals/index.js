@@ -190,17 +190,48 @@ JS приобразует строку "0" правдивому значению
 // }
 
 // Задача 2
-const number = +prompt('Введите число между 0 и 3', '');
+// const number = +prompt('Введите число между 0 и 3', '');
 
-switch (number) {
-    case 0:
-        alert('Вы ввели число 0');
-        break;
-    case 1:
-        alert('Вы ввели число 1');
-        break;
-    case 2:
-    case 3:
-        alert('Вы ввели число 2, а может и 3');
-        break;
+// switch (number) {
+//     case 0:
+//         alert('Вы ввели число 0');
+//         break;
+//     case 1:
+//         alert('Вы ввели число 1');
+//         break;
+//     case 2:
+//     case 3:
+//         alert('Вы ввели число 2, а может и 3');
+//         break;
+// }
+
+
+// 2.15 Функции
+
+// Задача 2
+function checkAge1(age) {
+    return (age > 18) ? true : confirm('Родители разрешили?');
+}
+
+function checkAge2(age) {
+    return (age > 18) || confirm('Родители разрешили?');
+}
+
+// Задача 3
+function min(a,b) {
+    return (a > b) ? b : a
+}
+
+// Задача 43
+function pow(x, n) {
+    return x ** n;
+}
+
+const customX = prompt('x?');
+const customN = prompt('n?');
+
+if (customN >= 1 && customN % 1 === 0) {
+    alert (pow(customX, customN));
+} else  {
+    alert(`Степень ${customN} не поддерживается, используйте натуральное число`);
 }
