@@ -49,18 +49,59 @@
 
 // Задача 5
 
-let menu = {
-    width: 200,
-    height: 300,
-    title: "My menu"
-  };
+// let menu = {
+//     width: 200,
+//     height: 300,
+//     title: "My menu"
+//   };
 
-function multiplyNumeric(obj) {
-    for (let key in obj) {
-        if (typeof obj[key] === 'number') {
-            obj[key] = obj[key] * 2
-        }
-    }
+// function multiplyNumeric(obj) {
+//     for (let key in obj) {
+//         if (typeof obj[key] === 'number') {
+//             obj[key] = obj[key] * 2
+//         }
+//     }
+// }
+
+// console.log(multiplyNumeric(menu));
+
+
+
+// 4.4 Методы объекта, this
+// Задача 1
+function makeUser() {
+    return {
+        name: 'John',
+        ref: this,
+    };
 }
 
-console.log(multiplyNumeric(menu));
+let user = makeUser();
+
+alert(user.ref.name);
+
+// результатом будет ошибка, потому что в данном случае this будет равно undefined
+
+// Задача 2
+
+let calculator = {
+    a: 0,
+    b: 0,
+    res: 0,
+    read() {
+        this.a = +(prompt('a?'));
+        this.b = +(prompt('b?'));
+        return this
+    },
+    sum() {
+        return this.a + this.b;
+    },
+    mul() {
+        return this.a * this.b
+    }
+
+}
+
+calculator.read();
+alert(calculator.sum());
+alert(calculator.mul());
