@@ -1,110 +1,110 @@
 // 3.1 Объекты
 
 // // Задача 1
-// const user = {};
-// user.name = 'John';
-// user.surname = 'Smith';
-// user.name = 'Pete';
-// delete user.name
-// console.log(user)
+const user = {};
+user.name = 'John';
+user.surname = 'Smith';
+user.name = 'Pete';
+delete user.name
+console.log(user)
 
 // // Задача 2
-// function isEmpty(obj) {
-//     for (let key in obj) {
-//         return true;
-//     }
-//     return false;
-// }
+function isEmpty(obj) {
+    for (let key in obj) {
+        return true;
+    }
+    return false;
+}
 
-// let schedule = {};
+let schedule = {};
 
-// alert( isEmpty(schedule) ); // true
+alert( isEmpty(schedule) ); // true
 
-// schedule["8:30"] = "get up";
+schedule["8:30"] = "get up";
 
-// alert( isEmpty(schedule) ); // false
+alert( isEmpty(schedule) ); // false
 
-// // Задача 3
-// const user = {
-//     name: "John"
-//   };
-//   // это будет работать?
-//   user.name = "Pete";
+// Задача 3
+const user = {
+    name: "John"
+  };
+  // это будет работать?
+  user.name = "Pete";
 
 //   // да, так как меняется не сам объект, а его свойства.
 
 // // Задача 4
-// let salaries = {
-//     John: 100,
-//     Ann: 160,
-//     Pete: 130
-//   }
+let salaries = {
+    John: 100,
+    Ann: 160,
+    Pete: 130
+  }
 
-// let sum = 0; 
-// for (let key in salaries) {
-//     sum += salaries[key];
-// }
+let sum = 0; 
+for (let key in salaries) {
+    sum += salaries[key];
+}
 
-// console.log(sum)
+console.log(sum)
 
 // Задача 5
 
-// let menu = {
-//     width: 200,
-//     height: 300,
-//     title: "My menu"
-//   };
+let menu = {
+    width: 200,
+    height: 300,
+    title: "My menu"
+  };
 
-// function multiplyNumeric(obj) {
-//     for (let key in obj) {
-//         if (typeof obj[key] === 'number') {
-//             obj[key] = obj[key] * 2
-//         }
-//     }
-// }
+function multiplyNumeric(obj) {
+    for (let key in obj) {
+        if (typeof obj[key] === 'number') {
+            obj[key] = obj[key] * 2
+        }
+    }
+}
 
-// console.log(multiplyNumeric(menu));
+console.log(multiplyNumeric(menu));
 
 
 
 // 4.4 Методы объекта, this
 // Задача 1
-// function makeUser() {
-//     return {
-//         name: 'John',
-//         ref: this,
-//     };
-// }
+function makeUser() {
+    return {
+        name: 'John',
+        ref: this,
+    };
+}
 
-// let user = makeUser();
+let user = makeUser();
 
-// alert(user.ref.name);
+alert(user.ref.name);
 
 // результатом будет ошибка, потому что в данном случае this будет равно undefined
 
 // Задача 2
 
-// let calculator = {
-//     a: 0,
-//     b: 0,
-//     res: 0,
-//     read() {
-//         this.a = +(prompt('a?'));
-//         this.b = +(prompt('b?'));
-//         return this
-//     },
-//     sum() {
-//         return this.a + this.b;
-//     },
-//     mul() {
-//         return this.a * this.b
-//     }
+let calculator = {
+    a: 0,
+    b: 0,
+    res: 0,
+    read() {
+        this.a = +(prompt('a?'));
+        this.b = +(prompt('b?'));
+        return this
+    },
+    sum() {
+        return this.a + this.b;
+    },
+    mul() {
+        return this.a * this.b
+    }
 
-// }
+}
 
-// calculator.read();
-// alert(calculator.sum());
-// alert(calculator.mul());
+calculator.read();
+alert(calculator.sum());
+alert(calculator.mul());
 
 // Задача 3
 
@@ -123,6 +123,53 @@ let ladder = {
         return this;
     }
 };
+
+// MDN Object.assign() examples
+
+// syntax
+
+const target = { a: 1, b: 2 };
+const source = { b: 4, c: 5 };
+
+console.log(target);
+
+const returnedTarget = Object.assign(target, source);
+
+console.log(target);
+console.log(target === returnedTarget);
+
+// cloning
+
+const obj = { a: 1 };
+const copy = Object.assign({}, obj);
+
+console.log(copy)
+
+// merging objects with same properties
+
+const o1 = { a: 1, b: 1, c: 1 };
+const o2 = { b: 2, c: 2 };
+const o3 = { c: 3 };
+
+const oMerged = Object.assign(o1, o2, o3); 
+
+console.log(o1) // {a: 1, b: 2, c: 3}
+console.log(o2) // {b: 2, c: 2}
+console.log(o3) // {c: 3}
+
+// primitives
+
+const v1 = 'abc';
+const v2 = true;
+const v3 = 10;
+
+const oPrimitives = Object.assign({}, v1, null, v2, undefined, v3);
+
+console.log(oPrimitives);
+
+// Primitives will be wrapped, null and undefined will be ignored.
+// Note, only string wrappers can have own enumerable properties.
+
 
 // gpt problems
 
