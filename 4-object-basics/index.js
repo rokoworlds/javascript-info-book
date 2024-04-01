@@ -234,6 +234,11 @@ console.log(original === copied); // false
 console.log(original.address === copied.address); // false
 
 
+
+
+
+
+
 // 4.5 Конструктор, оператор new
 
 // Задача 1
