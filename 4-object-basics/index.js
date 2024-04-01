@@ -232,3 +232,62 @@ console.log(copied);
 
 console.log(original === copied); // false
 console.log(original.address === copied.address); // false
+
+
+// 4.5 Конструктор, оператор new
+
+// Задача 1
+
+let sameObject = {};
+
+function A() {return sameObject};
+function B() {return sameObject};
+
+let a = new A();
+let b = new B();
+
+console.log(a == b) // true
+
+// Задача 2
+
+function Calculator() {
+    let a;
+    let b;
+
+    this.read = function() {
+        this.a = +prompt('a?', 0);
+        this.b = +prompt('b?', 0);
+    }
+
+    this.sum = function() {
+        return this.a + this.b;
+    }
+
+    this.mul = function() {
+        return this.a * this.b;
+    }
+}
+
+
+let newCalculator = new Calculator();
+newCalculator.read();
+
+console.log( "Sum=" + newCalculator.sum() );
+console.log( "Mul=" + newCalculator.mul() );
+
+// Задача 3
+
+function Accumulator(startingValue) {
+    this.value = startingValue;
+
+    this.read = function() {
+        this.value += +prompt('your num?', 0);
+    }
+}
+
+let accumulator = new Accumulator(1);
+
+accumulator.read();
+accumulator.read();
+
+console.log(accumulator.value)
