@@ -18,30 +18,44 @@ function Order() {
 
     this.isLocked = false;
     this.totalPrice = 0;
-
     this.check = [];
 
     this.addItem = function(item, count) {
         //  добавить итем в чек (+ имя +цена)
         if (!this.isLocked) {
-            let checkItem = {};
-            checkItem.name = item.name;
-            checkItem.price = item.price;
-            checkItem.count = count;
-
+            let checkItem = {
+                name : item.name,
+                price: item.price,
+                count: count,
+            };
             this.check.push(checkItem);
+            this.totalPrice += item.price * count;
 
         } else {
-            console.log('Ошибка! Заказ залочен');
+            console.log('Ошибка! Заказ заблокирован.');
         }
     }
 
     this.removeItem = function(item, count) {
         // убрать из чека count итемов (если не указано сколько - убрать все). Нельзя убрать больше чем было в чеке
         if (!this.isLocked) {
-            console.log('Удаляем из карзины');
+            let index = this.check.findIndex(checkItem => checkItem.name === item.name);
+
+            if (index !== -1) {
+                let currentCount = this.check[index].count;
+    
+                if (count === undefined || count >= currentCount) {
+                    this.totalPrice -= this.check[index].price * currentCount;
+                    this.check.splice(index, 1);
+                } else {
+                    this.check[index].count -= count;
+                    this.totalPrice -= this.check[index].price * count;
+                }
+            } else {
+                console.log('Ошибка! Товар не найден в чеке.')
+            }
         } else {
-            console.log('Ошибка! Заказ залочен');
+            console.log('Ошибка! Заказ заблокирован.');
         }
     }
 
@@ -61,6 +75,4 @@ function Order() {
         this.isLocked = false;
         console.log('Блокировка снята.')
     }
-
-
 }
