@@ -296,3 +296,40 @@ accumulator.read();
 accumulator.read();
 
 console.log(accumulator.value)
+
+
+// 4.7 Symbol
+
+// Задачка
+/*
+ Вам необходимо реализовать функцию, которая добавляет уникальный идентификатор к каждой задаче. 
+ Используйте символы (Symbol) для создания этих уникальных идентификаторов.
+*/
+
+function Task(description) {
+    this.id = Symbol();
+    this.description = description;
+    this.completed = false;
+}
+
+const task1 = new Task('Покорми кота');
+const task2 = new Task('Поешь сам');
+
+console.log(task1.id === task2.id); // Вернет false так как все символы уникальны.
+
+
+
+// 4.8. Преобразование объектов
+
+let user = {
+    name: 'John',
+    money: 1000,
+    [Symbol.toPrimitive](hint) {
+        console.log(`hint: ${hint}`);
+        return hint == 'string' ? `{name: '${this.name}'}` : this.money;
+    }
+};
+
+console.log(user); // string {name: "John"}
+console.log(+user); // number 1000
+console.log(user + 500); // number 1500
