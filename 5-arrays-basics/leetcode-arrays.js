@@ -79,3 +79,76 @@ The remaining elements of nums are not important as well as the size of nums.
 
 Return k.
 */
+
+function removeDuplicates(nums) {
+    if (nums.length === 0) return 0;
+
+    let leftPointer = 1;
+
+    for (let i = 1; i < nums.length; i++) {
+        if (nums[i] !== nums[i - 1]) {
+            nums[leftPointer] = nums[i];
+            leftPointer++;
+        }
+    }
+
+    return leftPointer;
+}
+
+
+/*
+27. Remove Element
+
+Given an integer array nums and an integer val, remove all occurrences of val in nums in-place. 
+The order of the elements may be changed. Then return the number of elements in nums which are not equal to val.
+
+Consider the number of elements in nums which are not equal to val be k, to get accepted, you need to do the following things:
+
+Change the array nums such that the first k elements of nums contain the elements which are not equal to val. 
+The remaining elements of nums are not important as well as the size of nums.
+
+Return k.
+*/
+
+
+function removeElement(nums, val) {
+    if (nums.length === 0) return 0;
+
+    let leftPointer = 0;
+
+    for (let i = 0; i < nums.length; i++) {
+        if (nums[i] !== val) {
+            nums[leftPointer] = nums[i];
+            leftPointer++;
+        }
+    }
+    return leftPointer;
+}
+
+
+/*
+35. Search Insert Position
+
+Given a sorted array of distinct integers and a target value, return the index if the target is found. 
+If not, return the index where it would be if it were inserted in order.
+
+You must write an algorithm with O(log n) runtime complexity.
+*/
+
+function searchInsert(nums, target) {
+    if (nums.length === 0) return 0;
+
+    let leftPointer = 0;
+
+    for (let i = 0; i < nums.length; i++) {
+        if (nums[i] === target) {
+            return i;
+        } else if (nums[i] < target) {
+            leftPointer++;
+        }
+    }
+
+    return leftPointer;
+}
+
+
