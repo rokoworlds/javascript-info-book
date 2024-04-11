@@ -194,30 +194,7 @@ GPT task
 
 */
 
-// function countUniqueCommonElements(arrays) {
-//     const set1 = new Set(arrays[0]);
-//     const set2 = new Set();
-//     const set3 = new Set();
-//     let result = [];
-
-//     for (let i = 1; i < arrays.length; i++) {
-//         for (let el of arrays[i]) {
-//             if (set1.has(el)) {
-//                 set2.add(el)
-//             }
-//         }
-//     }
-// }
-
-// const arrays = [
-//     [1, 2, 3, 4, 5],
-//     [3, 4, 5, 6, 7],
-//     [5, 6, 7, 8, 9]
-//   ];
-//   console.log(countUniqueCommonElements(arrays)); 
-
-
-  function countUniqueCommonElements(arrays) {
+function countUniqueCommonElements(arrays) {
     if (arrays.length === 0) return 0;
 
     let commonElements = new Set(arrays[0]);
@@ -240,10 +217,9 @@ function intersectSets(setA, setB) {
     return intersection;
 }
 
-// Пример использования:
 const arrays = [
     [1, 2, 3, 4, 5],
     [3, 4, 5, 6, 7],
     [5, 6, 7, 8, 9]
 ];
-console.log(countUniqueCommonElements(arrays)); // Выведет: 1
+console.log(countUniqueCommonElements(arrays)); // 1
