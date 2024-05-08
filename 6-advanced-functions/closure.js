@@ -227,3 +227,127 @@ const multBy2AndLog = saveOutput(multiplyBy2, 'boo');
 console.log(multBy2AndLog(2)); // => should log 4
 console.log(multBy2AndLog(9)); // => should log 18
 console.log(multBy2AndLog('boo')); // => should log { 2: 4, 9: 18 }
+
+
+/*
+Challenge 9
+Create a function cycleIterator that accepts an array, and returns a function. 
+The returned function will accept zero arguments. 
+When first invoked, the returned function will return the first element of the array. When invoked a second time, the returned 
+function will return the second element of the array, and so forth. 
+After returning the last element of the array, the next invocation will return the first element of the array again, and continue on with the second after that, and so forth.
+*/
+
+
+function cycleIterator(array) {
+    let count = 0;
+    
+    function print() {
+        if (count >= array.length) {
+            count = 0;
+        }
+        console.log(array[count]);
+        count++;
+    }
+
+    return print;
+}
+
+// /*** Uncomment these to check your work! ***/
+const threeDayWeekend = ['Fri', 'Sat', 'Sun'];
+const getDay = cycleIterator(threeDayWeekend);
+console.log(getDay()); // => should log 'Fri'
+console.log(getDay()); // => should log 'Sat'
+console.log(getDay()); // => should log 'Sun'
+console.log(getDay()); // => should log 'Fri'
+
+
+/*
+Challenge 10
+Create a function defineFirstArg that accepts a function and an argument.
+Also, the function being passed in will accept at least one argument. 
+defineFirstArg will return a new function that invokes the passed-in function with the passed-in argument as the passed-in function's first argument. 
+Additional arguments needed by the passed-in function will need to be passed into the returned function.
+*/
+
+function defineFirstArg(func, arg) {
+    function print(num) {
+        return func(arg, num);
+    }
+
+    return print;
+}
+
+// /*** Uncomment these to check your work! ***/
+const subtract = function(big, small) { return big - small; };
+const subFrom20 = defineFirstArg(subtract, 20);
+console.log(subFrom20(5)); // => should log 15
+
+
+
+/*
+Challenge 11
+Create a function dateStamp that accepts a function and returns a function. 
+The returned function will accept however many arguments the passed-in function accepts, and return an object with a date key that contains
+a timestamp with the time of invocation, and an output key that contains the result from invoking the passed-in function. 
+*/
+
+
+function dateStamp(func) {
+    function print(...args) {
+        let result = {};
+        result[Date.now()] = func(...args);
+        return result;
+    }
+
+    return print;
+}
+
+// /*** Uncomment these to check your work! ***/
+const stampedMultBy2 = dateStamp(n => n * 2);
+console.log(stampedMultBy2(4)); // => should log { date: (today's date), output: 8 }
+console.log(stampedMultBy2(6)); // => should log { date: (today's date), output: 12 }
+
+
+/*
+Challenge 12
+Create a function censor that accepts no arguments. 
+censor will return a function that will accept either two strings, or one string. 
+When two strings are given, the returned function will hold onto the two strings as a pair, for future use. 
+When one string is given, the returned function will return the same string, except all instances of first strings (of saved pairs) 
+will be replaced with their corresponding second strings (of those saved pairs).
+*/
+
+function censor() {
+    let cache = {};
+    
+    function print(...args) {
+        if (arguments.length === 2) {
+            cache[arguments[0]] = arguments[1];
+        }
+
+        if (arguments.length > 2) {
+            console.log('Error: too much words');
+        }
+
+        let str = arguments[0];
+        let doubleArgs = Object.keys(cache);
+
+        if (doubleArgs.length > 0) {
+            doubleArgs.map((word) => {
+                str.replace(word, cache[word])
+            })
+        }
+
+        console.log(str)
+
+    }
+
+    return print;
+}
+
+// /*** Uncomment these to check your work! ***/
+const changeScene = censor();
+changeScene('dogs', 'cats');
+changeScene('quick', 'slow');
+console.log(changeScene('The quick, brown fox jumps over the lazy dogs.')); // => should log 'The slow, brown fox jumps over the lazy cats.'
