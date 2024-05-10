@@ -128,3 +128,61 @@ function printListBackwards2(list) {
         console.log(arr[i]);
     }
 }
+
+
+// GPT task
+
+let directory = {
+    name: "Root",
+    type: "directory",
+    children: [
+        {
+            name: "Folder1",
+            type: "directory",
+            children: [
+                {
+                    name: "Subfolder1",
+                    type: "directory",
+                    children: []
+                },
+                {
+                    name: "Subfolder2",
+                    type: "directory",
+                    children: []
+                }
+            ]
+        },
+        {
+            name: "Folder2",
+            type: "directory",
+            children: [
+                {
+                    name: "Subfolder3",
+                    type: "directory",
+                    children: []
+                },
+                {
+                    name: "File1.txt",
+                    type: "file"
+                }
+            ]
+        },
+        {
+            name: "File2.txt",
+            type: "file"
+        }
+    ]
+};
+
+
+/*
+    Напишите функцию printDirectoryStructure, которая рекурсивно выводит структуру каталогов, начиная с корневого каталога.
+*/
+
+function printDirectoryStructure(dir, counter = 0) {
+    console.log(" ".repeat(counter) + dir.name);
+
+    if (dir.type === 'directory') {
+        dir.children.forEach((child) => printDirectoryStructure(child, counter + 1))
+    }
+}
