@@ -30,4 +30,21 @@ function work(a, b) {
 
   // Задача 2
 
+  function delay(func, wait) {
+    function print() {
+      return setTimeout(() => func.apply(this, arguments), wait)
+    }
+
+    return print;
+  }
+
+  function f(x) {
+    alert(x);
+  }
   
+  // создаём обёртки
+  let f1000 = delay(f, 1000);
+  let f1500 = delay(f, 1500);
+  
+  f1000("test"); // показывает "test" после 1000 мс
+  f1500("test");
