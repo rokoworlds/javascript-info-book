@@ -1,166 +1,104 @@
 // Написать софт на чайник на ООП
 
 /**
-
-logStat() выводит всю информацию о тостере - мощность, время нагрева, есть ли сейчас нагрев, есть ли хлеб внутри, сколько уже хлеб греется времени, сколько мощности ушло на хлебушек
-
-logPower() вывести сколько мощности ушло на хлеб за время его работы (например 20 сек работали с мощностью 5, а потом 10 сек работали с мощностью 3 - получится 20 * 5 + 10 * 3 = 130). Нужна как общая сумма за все запуски так и сумма за последний. при ejectBread() или insertBread() - то есть когда у нас новый хлебушек вставился - счетчик обнуляется
+Методы взаимодействия с чайником:
+    .toggle() - кнопка включения / выключения чайника
+    .addWater() / .removeWater() - налить или слить воду
+    .setTemperature() - задачть температуру до которой будет нагреваться чайник
+    .printStatus() - выводит текущий статус работы чайника
 
  */
 
 
 let kettle = {
-    power: false,
-    _waterLevel: 0,
-    currentTemperature: 0,
+    isOn : false,
+    temperature : 100, // Дефолтная температура 100 градусов
+    power : 2000, // 2000W
+    specificHeatCapacity : 4184, // Удельная теплоёмкость воды в Дж/(кг·°C)
+    waterLevel : 0,
+    waterLevelIsOk: false,
+    currentTemperature: 20, // Средняя комнатная температура воды
+    startTime : null,
 
-    turnOn() {
-        // turn on kettle
-    },
-
-    turnOff() {
-        // turn off kattle 
-            // - manualy or 
-            // if water is boiled or 
-            // if timer is over
-    },
-
-    heat() {
-        // heats water while on
-    },
-
-    setTemperature(temp = 100) {
-        // set temperature if needed;
-    },
-
-    getTemperature() {
-        // get current temperature of water;
-    },
-
-    maintainTemperature(temp) {
-        // maintain temperature of water while is on
-    },
-
-    stopMaintainTemperature() {
-        // stop maintaining
-    },
-
-    checkOverheat() {
-        // check kettle temp on overheat
-    },
-
-    activateOverheatProtection() {
-        // activated if overheated
-    },
-
-    logStats() {
-        // logs stats about current state of water
-    },
-
-    checkWaterLevel() {
-        if (this._waterLevel > 1500 || this._waterLevel < 200) this.alertWaterLevel();
-    }, 
-
-    isWaterEnough() {
-        // now sure if needed
-    },
-
-    alertWaterLevel() {
-        if (this._waterLevel > 1500) {
-            console.log('Water level is too high!')
-        } 
-
-        if (this._waterLevel < 200) {
-            console.log('Water level is too low!')
+    // Включение и выключение чайника
+    toggle() {
+        this.isOn = !this.isOn;
+        if (this.isOn) {
+            this.startTime = Date.now();
+            this.checkTemperatureInterval = setInterval(() => this.checkTemperature(), 5000);
+        } else {
+            this.calculateCurrentTemperature();
+            this.startTime = null;
+            clearInterval(this.checkTemperatureInterval);
         }
+        this.printStatus();
+    },
 
-        console.log('Check water level before use!')
-    },
-    
-    get waterLevel() {
-        return this._waterLevel;
-    },
+    // Методы по работе с водой
 
     addWater(val) {
-        if (val < 200) console.log('Add more water.')
-        this._waterLevel = val;
-    },
-
-    removeWater(val) {
-        if (val <= this._waterLevel) {
-            this._waterLevel -= val;
-        }
-    }
-
-}
-
-// Налил воды
-// Включил чайник
-// 
-// Чайник нагревает воду
-// Вода закипает
-// Чайник выключается
-// 
-//
-
-
-let kettle2 = {
-    power: false,
-
-    waterLevel: 0,
-
-    temperature: 0,
-
-    currentTemperature: 0,
-
-
-    checkWaterLevel() {
-        if (this.waterLevel > 1500 || this.waterLevel < 200) this.alertWaterLevel();
-    }, 
-
-    alertWaterLevel() {
-        if (this.waterLevel > 1500) {
-            console.log('Water level is too high!')
-        } 
-
-        if (this.waterLevel < 200) {
-            console.log('Water level is too low!')
-        }
-
-        console.log('Check water level before use!')
-    },
-
-    addWater(val) {
-        this.waterLevel = val;
+        this.waterLevel += val;
+        this.checkWaterLevel();
     },
 
     removeWater(val) {
         this.waterLevel -= val;
+        this.checkWaterLevel();
     },
 
-    turnOn() {
-        if (this.power) {
-            this.heat();
+    checkWaterLevel() {
+        if (this.waterLevel > 1500) {
+            this.waterLevelIsOk = false;
+            console.log('Уровень воды слишком высокий!');
+        } else if (this.waterLevel < 200) {
+            this.waterLevelIsOk = false;
+            console.log('Уровень воды слишком низкий!');
         } else {
-            console.log('Turn on power!')
+            this.waterLevelIsOk = true;
+            console.log(`Уровень воды составляет ${this.waterLevel} мл.`);
+        }
+    }, 
+
+    // Методы по работе с температурой
+
+    calculateCurrentTemperature() {
+        if (this.startTime) {
+            const elapsedTime = (Date.now() - this.startTime) / 1000;
+            const temperatureIncrease = (this.power * elapsedTime) / (this.waterLevel * this.specificHeatCapacity);
+            this.currentTemperature = this.currentTemperature + Number(temperatureIncrease.toFixed(2));
         }
     },
 
-    heat() {
-        while(this.currentTemperature !== this.temperature) {
-            this.currentTemperature * 2
+    setTemperature(temp) {
+        if (this.isOn) {
+            if (temp >= 0 && temp <= 100) {
+                this.temperature = temp;
+                console.log(`Температура установлена на ${this.temperature}`);
+            } else {
+                console.log('Введите корректное значение температуры (от 0 до 100)')
+            }
+        } else {
+            console.log('Чайник выключен! Включите его для установки температуры.')
         }
     },
 
     checkTemperature() {
-        return this.currentTemperature;
+        this.calculateCurrentTemperature();
+        if (this.currentTemperature >= this.temperature) {
+            this.toggle();
+            console.log(`Чайник достиг заданной температуры ${this.temperature}°C.`);
+        }
     },
 
-    turnOff() {
+    // Проверка статуса
 
-    },
-
-    setTemperature(val) {
-        this.temperature = val;
+    printStatus() {
+        this.calculateCurrentTemperature();
+        if (this.isOn) {
+            console.log(`Чайник включен, уровень воды: ${this.waterLevel}мл, температура: ${this.currentTemperature}°C`);
+        } else {
+            console.log(`Чайник выключен, уровень воды: ${this.waterLevel}мл`);
+        }
     }
+
 }
