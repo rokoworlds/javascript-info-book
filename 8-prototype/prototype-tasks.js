@@ -73,6 +73,41 @@ const sum = arr3.myReduce((acc, num) => acc + num, 0);
 console.log(sum);
 
 
+// MDN Guide
+
+function User(first, last, age, gender, interests) {
+    this.name = {
+        first: first,
+        last: last,
+    };
+    this.age = age;
+    this.gender = gender;
+    this.interests = [...interests];
+};
+
+const user1 = new User('Bob', 'Bobinsky', 30, 'male', ['music', 'running']);
+
+const admin1 = Object.create(user1);
+
+console.log(admin1.name) // {first: 'Bob', last: 'Bobinsky'}
+
+// how .constructor works
+
+console.log(user1.constructor) // logs User constructor funciton
+
+const user2 = new user1.constructor('Lola', 'Lolinsky', 30, 'female', ['gaming', 'dancing']); // creates new user using User
+
+console.log(user2.constructor.name); //  User
+
+
+User.prototype.greetings = function() {
+    console.log(this.name.first + ' solutes you!');
+};
+
+user1.greetings() // Bob solutes you!
+user2.greetings() // Lola solutes you!
+
+
 
 // Leetcode tasks
 
@@ -82,13 +117,7 @@ console.log(sum);
 Write code that enhances all arrays such that you can call the array.last() method 
 on any array and it will return the last element. 
 If there are no elements in the array, it should return -1.
-
 You may assume the array is the output of JSON.parse.
-
-Example 1:
-Input: nums = [null, {}, 3]
-Output: 3
-Explanation: Calling nums.last() should return the last element: 3.
  */
 
 Array.prototype.last = function() {
@@ -100,32 +129,10 @@ Array.prototype.last = function() {
 
 /**
 Write code that enhances all arrays such that you can call the array.groupBy(fn) method on any array and it will return a grouped version of the array.
-
 A grouped array is an object where each key is the output of fn(arr[i]) and each value is an array containing all items in the original array with that key.
-
 The provided callback fn will accept an item in the array and return a string key.
-
 The order of each value list should be the order the items appear in the array. Any order of keys is acceptable.
-
 Please solve it without lodash's _.groupBy function.
-
- 
-
-Example 1:
-
-Input: 
-array = [
-  {"id":"1"},
-  {"id":"1"},
-  {"id":"2"}
-], 
-fn = function (item) { 
-  return item.id; 
-}
-Output: 
-{ 
-  "1": [{"id": "1"}, {"id": "1"}],   
-  "2": [{"id": "2"}] 
  */
 
 
