@@ -10,7 +10,7 @@
  */
 
 
-let kettle = {
+const kettle = {
     isOn : false,
     temperature : 100, // Дефолтная температура 100 градусов
     power : 2000, // 2000W
@@ -25,7 +25,7 @@ let kettle = {
         this.isOn = !this.isOn;
         if (this.isOn) {
             this.startTime = Date.now();
-            this.checkTemperatureInterval = setInterval(() => this.checkTemperature(), 5000);
+            this.checkTemperatureInterval = setInterval(this.checkTemperature, 5000);
         } else {
             this.calculateCurrentTemperature();
             this.startTime = null;
@@ -37,11 +37,21 @@ let kettle = {
     // Методы по работе с водой
 
     addWater(val) {
+        if (this.waterLevel + val > 1500) {
+            console.log('Превышен уровень допустимый уровень воды (1500мл).');
+            console.log(`Текущий уровень воды: ${this.waterLevel}`);
+            return;
+        }
         this.waterLevel += val;
         this.checkWaterLevel();
     },
 
     removeWater(val) {
+        if (this.waterLevel - val < 0) {
+            this.waterLevel = 0;
+            console.log('Чайник пуст. Уровень воды: 0');
+            return;
+        }
         this.waterLevel -= val;
         this.checkWaterLevel();
     },
@@ -49,37 +59,48 @@ let kettle = {
     checkWaterLevel() {
         if (this.waterLevel > 1500) {
             this.waterLevelIsOk = false;
-            console.log('Уровень воды слишком высокий!');
-        } else if (this.waterLevel < 200) {
+            console.log('Уровень воды слишком высокий! Максимальный уровень воды: 1500мл.');
+            console.log(`Текущий уровень воды: ${this.waterLevel}`);
+            return;
+        } 
+        
+        if (this.waterLevel < 200) {
             this.waterLevelIsOk = false;
-            console.log('Уровень воды слишком низкий!');
-        } else {
-            this.waterLevelIsOk = true;
-            console.log(`Уровень воды составляет ${this.waterLevel} мл.`);
-        }
+            console.log('Уровень воды слишком низкий! Минимальный уровень воды: 200мл.');
+            console.log(`Текущий уровень воды: ${this.waterLevel}`);
+            return;
+        } 
+
+        this.waterLevelIsOk = true;
+        console.log(`Уровень воды составляет ${this.waterLevel} мл.`);
+
     }, 
 
     // Методы по работе с температурой
 
     calculateCurrentTemperature() {
         if (this.startTime) {
-            const elapsedTime = (Date.now() - this.startTime) / 1000;
-            const temperatureIncrease = (this.power * elapsedTime) / (this.waterLevel * this.specificHeatCapacity);
+            const elapsedTimeInSeconds = (Date.now() - this.startTime) / 1000;
+            const temperatureIncrease = (this.power * elapsedTimeInSeconds) / (this.waterLevel * this.specificHeatCapacity);
             this.currentTemperature = this.currentTemperature + Number(temperatureIncrease.toFixed(2));
         }
     },
 
     setTemperature(temp) {
         if (this.isOn) {
+
             if (temp >= 0 && temp <= 100) {
                 this.temperature = temp;
                 console.log(`Температура установлена на ${this.temperature}`);
-            } else {
-                console.log('Введите корректное значение температуры (от 0 до 100)')
+                return;
             }
-        } else {
-            console.log('Чайник выключен! Включите его для установки температуры.')
-        }
+
+            console.log('Введите корректное значение температуры (от 0 до 100)')
+            return;
+            } 
+        
+        console.log('Чайник выключен! Включите его для установки температуры.')
+        
     },
 
     checkTemperature() {
@@ -96,9 +117,10 @@ let kettle = {
         this.calculateCurrentTemperature();
         if (this.isOn) {
             console.log(`Чайник включен, уровень воды: ${this.waterLevel}мл, температура: ${this.currentTemperature}°C`);
-        } else {
-            console.log(`Чайник выключен, уровень воды: ${this.waterLevel}мл`);
+            return;
         }
+
+        console.log(`Чайник выключен, уровень воды: ${this.waterLevel}мл`);
     }
 
 }
