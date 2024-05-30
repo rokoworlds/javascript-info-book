@@ -8,7 +8,7 @@ let promise = new Promise(function(resolve, reject) {
     setTimeout(() => resolve(2), 1000);
   });
   
-  promise.then(alert);
+  promise.then(alert); // 1. Принимается только первый resolve
 
 // Задача 2
 
@@ -17,17 +17,6 @@ function delay(ms) {
   }
   
   delay(3000).then(() => alert('выполнилось через 3 секунды'));
-
-// Задача 3
-
-
-showCircle(150, 150, 100).then(div => {
-    div.classList.add('message-ball');
-    div.append("Hello, world!");
-  });
-
-
-  // 11.3 Цепочки промисов
 
 
   // 11.4 Обработка ошибок
