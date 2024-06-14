@@ -1,76 +1,104 @@
+const statuses = {
+    pending: "PENDING",
+    fulfilled: "FULFILLED",
+    rejected: "REJECTED",
+};
+
 class MyPromise {
+    #status;
+    #value;
+    #deffered = [];
+
     constructor(executor) {
-        this.status = 'pending';
-        this.value = undefined;
-        this.error = undefined;
-        this.onFulfilledCallbacks = [];
-        this.onRejectCallbacks = [];
 
-
-        const resolve = (value) => {
-            if (this.status === 'pending') {
-                this.status = 'fulfilled';
-                this.value = value;
-                this.onFulfilledCallbacks.forEach((cb) => cb(value));
-            }
+        if (typeof executor !== 'function') {
+            throw new TypeError('Not a function!')
         }
-
-        const reject = (error) => {
-            if (this.status === 'pending') {
-                this.status = 'rejected';
-                this.error = error;
-                this.onRejectCallbacks.forEach((cb) => cb(error));
-            }
-        }
-
+        this.#status = statuses.pending;
         try {
-            executor(resolve, reject);
+            executor(this.#resolve.bind(this), this.#reject.bind(this));
           } catch (err) {
-            reject(err);
+            this.#reject.bind(this)(err);
           }
     }
 
+    #resolve(data) {
+        if (this.#status === statuses.pending) {
+            this.#status = statuses.fulfilled;
+            this.#value = data;
+            this.#handle();
+        }
+    }
 
-    then(onFulfilled, onRejected) {
-        return new MyPromise((resolve, reject) => {
-            if (this.status === 'fulfilled') {
-                setTimeout(() => {
-                    try {
-                        resolve(onFulfilled(this.value));
-                    } catch (error) {
-                        reject(error)
+    #reject(error) {
+        if (this.#status === statuses.pending) {
+            this.#status = statuses.rejected;
+            this.#value = error;
+            this.#handle();
+        }
+    }
+
+    #handle() {
+        if (this.#status === statuses.rejected && this.#deffered.length === 0) {
+            console.error('Unhandled promise rejection', this.#value);
+        }
+
+        this.#deffered.forEach((deferred) => {
+            queueMicrotask(() => {
+                const callback = this.#status === statuses.fulfilled ? deferred.onResolved : deferred.onRejected;
+                if (callback === null) {
+                    if (this.#status === statuses.fulfilled) {
+                        this.#resolve.bind(deferred.promise)(this.#value);
+                    } else {
+                        this.#reject.bind(deferred.promise)(this.#value);
                     }
-                }, 0)
-            } else if (this.status === 'rejected') {
-                setTimeout(() => {
-                    try {
-                        reject(onRejected(this.error))
-                    } catch (error) {
-                        reject(error);
-                    }
-                }, 0);
-            } else {
-                this.onFulfilledCallbacks.push(onFulfilled);
-                this.onRejectCallbacks.push(onRejected);
-            }
+                    return;
+                }
+
+                let result;
+
+                try {
+                    result = callback(this.#value);
+                } catch (e) {
+                    this.#reject.bind(deferred.promise)(e);
+                }
+                this.#resolve.bind(deferred.promise)(result);
+            })
         })
     }
 
-    // catch() {
-        // work in progress
-    // }
 
-    // finally() {
-        // work in progress
-    // }
+    then(onResolved, onRejected) {
+        const promise = new this.constructor(() => {});
+
+        this.#deffered.push({
+            onResolved: typeof onResolved === 'function' ? onResolved : null,
+            onRejected: typeof onRejected === 'function' ? onRejected : null,
+            promise
+        })
+        return promise;
+    }
+
+    catch(onRejected) {
+        return this.then(null, onRejected);
+    }
+
 }
 
 
-const promise = new MyPromise((resolve, reject) => {
-    console.log('First!')
-    setTimeout(() => resolve('Third!'), 1000);
+const promiseTimeout = new MyPromise((resolve, reject) => {
+    setTimeout(() => {
+      resolve("Time is over");
+      reject(new Error("Error"));
+    }, 1000);
   });
-   
-  promise.then((result) => console.log(result));
-
-  console.log('Second!')
+  
+  promiseTimeout
+      .then((data) => {
+        console.log(data);
+      })
+      .then(() => {
+        console.log("step 2");
+        throw new Error("Error!");
+      })
+      .catch((err) => console.log(err.message ? err.message : err));
